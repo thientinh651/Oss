@@ -21,5 +21,5 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           protocol: ftp
           port: 21
-          local-dir: ./Oss
-          server-dir: /Oss/
+          local-dir: ./
+          server-dir: /www.hostgit.somee.com/
