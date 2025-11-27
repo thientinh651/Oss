@@ -1,4 +1,4 @@
-name: Deploy ASP.NET Core to Somee via FTP
+name: Deploy static site to Somee via FTP
 
 on:
   push:
@@ -6,23 +6,12 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
-    runs-on: windows-latest
+  deploy:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
-
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0.x' # hoặc phiên bản bạn dùng
-
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build project
-        run: dotnet publish -c Release -o ./publish
 
       - name: Upload to Somee via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -32,5 +21,5 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           protocol: ftp
           port: 21
-          local-dir: ./publish
+          local-dir: ./   # repo gốc chứa index.html
           server-dir: /wwwroot/
