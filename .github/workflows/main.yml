@@ -21,5 +21,5 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           protocol: ftp
           port: 21
-          local-dir: ./   # repo chứa index.html
-          server-dir: /oss/   # chính xác theo đường dẫn web
+          local-dir: ./oss
+          server-dir: /oss/
