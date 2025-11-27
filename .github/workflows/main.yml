@@ -1,32 +1,53 @@
-name: Deploy static site to Somee via FTP
+name: Deploy to somee
 
 on:
   push:
+    # Kích hoạt quá trình triển khai mỗi khi có commit được đẩy lên nhánh 'main'
     branches:
       - main
+  workflow_dispatch:
+    # Cho phép chạy thủ công từ giao diện GitHub
 
 jobs:
   deploy:
+    name: Deploy to somee
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3
+      - name: check source
+        uses: actions/checkout@v4
 
-      - name: Upload to Somee via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      # (Tùy chọn) Nếu dự án của bạn là mã nguồn cần được build/compile (ví dụ: React, Vue, Node.js)
+      # Hãy thêm các bước build ở đây. Ví dụ:
+      # - name: Thiết lập Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '18'
+      # - name: Cài đặt Dependencies và Build
+      #   run: |
+      #     npm install
+      #     npm run build
+      
+      - name: Deploy to somee
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.0
         with:
-          # --- PHẦN ĐÃ SỬA ---
-          # Dùng ./ để chỉ định upload từ thư mục gốc của GitHub Repository
+          # Thay thế 'folder' bằng 'local-dir' (Thư mục nguồn trên GitHub Runner)
           local-dir: ./
-          # -------------------
-
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          protocol: ftp
-          port: 21
           
-          # Lưu ý: Đây là nơi file sẽ được lưu trên server Somee.
-          # Hiện tại nó sẽ lưu thẳng vào thư mục gốc của website.
+          # Thay thế 'ftp-server' bằng 'server' (Sử dụng secrets.HOST)
+          server: ${{ secrets.HOST }}
+          
+          # Thay thế 'ftp-username' bằng 'username' (Sử dụng secrets.USERNAME)
+          username: ${{ secrets.USER }}
+          
+          # Thay thế 'ftp-password' bằng 'password' (Sử dụng secrets.PASSWORD)
+          password: ${{ secrets.PASS }}
+          
+          # Thay thế 'ftp-port' bằng 'port'
+          port: 21 
+          protocol: ftp
+          # Thay thế 'to-directory' bằng 'server-dir' (Thư mục đích trên FTP Server)
           server-dir: /www.hostgit.somee.com/
+          
+          # Giữ nguyên các tham số khác
+          dangerous-clean-slate: false
